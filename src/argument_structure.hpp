@@ -13,15 +13,13 @@
 
 struct argument_structure {
     public:
-        std::string *interface;
+        std::string interface;
         int packets;
         int port;
         bool icmp;
         bool tcp;
         bool udp;
         bool arp;
-
-
-}typedef arg_struct;
+};
 
 #endif
