@@ -5,20 +5,27 @@
  * @brief: file with definition of list_interfaces
  */
 
-#include <ifaddrs.h>
+#include <pcap.h>
 #include <iostream>
 #include "list_interfaces.hpp"
 
 int list_interfaces() {
-    //create iffaddrs struct
-    struct ifaddrs *ifaddr, *ifaddr_head;
+    
+    pcap_if_t *alldevs;
+    pcap_if_t *d;
 
-    if(getifaddrs(&ifaddr_head) == -1) {
+    char *error_buffer =(char*) malloc(1000);
+
+    int retval = pcap_findalldevs(&alldevs, error_buffer);
+    if(retval != 0) {
+        std::cout << error_buffer;
         return -1;
     }
 
-    for(ifaddr = ifaddr_head; ifaddr != NULL; ifaddr = ifaddr->ifa_next) {
-        std::cout << ifaddr->ifa_name << "\n";
+    for(d = alldevs; d != NULL; d = d->next) {
+        std::cout << "interface name is: " << d->name << "\n";
+        if(d->description != NULL)
+            std::cout << "  description: " << d->description << "\n\n";
     }
 
     return 0;

@@ -12,6 +12,7 @@ OBJ_DIR := ./obj
 
 # flags
 CPPFLAGS = -g -Wall -Werror
+LDFLAGS = -lpcap
 
 # source files
 SRC_FILES = $(SRC_DIR)/*.cpp
@@ -23,7 +24,6 @@ TARGET = ipk-sniffer
 all: $(TARGET)
 
 $(TARGET): $(SRC_FILES) $(HEADER_FILES)
-	$(CC) $(CPPFLAGS) -o $(TARGET) $(SRC_FILES)
-
+	$(CC) $(CPPFLAGS) -o $(TARGET) $(SRC_FILES) $(LDFLAGS)
 clean:
 	rm $(TARGET)
