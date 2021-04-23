@@ -9,25 +9,23 @@
 #include <iostream>
 #include "list_interfaces.hpp"
 
-int list_interfaces() {
+bool list_interfaces() {
     
     pcap_if_t *alldevs;
     pcap_if_t *d;
 
-    char *error_buffer =(char*) malloc(1000);
+    char error_buffer[PCAP_ERRBUF_SIZE ];
 
     int retval = pcap_findalldevs(&alldevs, error_buffer);
     if(retval != 0) {
         std::cout << error_buffer;
-        return -1;
+        return false;
     }
 
     for(d = alldevs; d != NULL; d = d->next) {
-        std::cout << "interface name is: " << d->name << "\n";
-        if(d->description != NULL)
-            std::cout << "  description: " << d->description << "\n\n";
+        std::cout << d->name << "\n";
     }
 
-    return 0;
-
+    pcap_freealldevs(alldevs);
+    return true;
 }

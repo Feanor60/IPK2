@@ -8,6 +8,10 @@
 #ifndef __LIST_INTERFACES__
 #define __LIST_INTERFACES__
 
-int list_interfaces();
+/**
+ * @brief: lists all available interfaces
+ * @retval: returns true when no error, else false
+ */
+bool list_interfaces();
 
 #endif
