@@ -3,12 +3,11 @@
  * @author: Vojtěch Bůbela
  * @login: xbubel08
  * @brief: main.cpp implements packet sniffer, a application for IPK second project
- * @description: packet sniffer can steal packets on given network
- *               behaivour can be configured with arguments 
+ * @description: packet sniffer can steal packets on given network.
+ *               It's behaviour can be configured with arguments 
  */
 
 // -- includes -- 
-
 #include <iostream>
 #include <list>
 #include <string>
@@ -72,11 +71,10 @@ int main(int argc, char *argv[]) {
 
     if(!steal_packets(store_arg)) {
         delete store_arg;
+        std::cout << "Error while sniffing packets\n";
         return -1;
     }
 
-
     delete store_arg;
-    // finish program
     return 0;
 }

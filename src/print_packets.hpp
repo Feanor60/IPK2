@@ -21,6 +21,9 @@
  */
 bool print_packets(argument_structure *store_args, pcap_t *interface);
 
+const char *timestamp_string(struct timeval ts);
+
+void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
 #endif
 

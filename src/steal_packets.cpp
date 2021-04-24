@@ -12,6 +12,7 @@
 #include "argument_structure.hpp"
 #include "steal_packets.hpp"
 #include "print_packets.hpp"
+#include "setup_filter.hpp"
 
 bool steal_packets(argument_structure *store_args) {
 
@@ -44,6 +45,11 @@ bool steal_packets(argument_structure *store_args) {
         return false;
     }
 
+
+    // filter stolen packets
+    setup_filter(interface, store_args);
+
+    // print stolen packets
     if(!print_packets(store_args, interface)) {
         return false;
     }

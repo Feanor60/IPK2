@@ -18,4 +18,8 @@
  */
 bool steal_packets(argument_structure *store_args);
 
+typedef void (*pcap_handler)(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes);
+
+void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
+
 #endif
