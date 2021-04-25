@@ -17,6 +17,7 @@
 #include <netinet/udp.h>
 #include <netinet/ip.h>
 #include <net/ethernet.h>
+#include <ctype.h>
 
 #include "print_packets.hpp"
 
@@ -30,34 +31,29 @@ bool print_packets(argument_structure *store_args, pcap_t *interface) {
 
 void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
-    // int size = header->len;
-    // int total = 0;
-    // int icmp = 0;
-    // int igmp = 0;
-    // int tcp = 0;
-    // int udp = 0;
-    // int others = 0;
-
 	struct sockaddr_in src;
 	struct sockaddr_in dest;
+	struct iphdr *ip_header;
+	struct tcphdr *tcp_header;
+	struct timeval tv;
+	char buf[28];
+	int size_of_headers;
 
-	
 	// get ip header
-	struct iphdr *ip_header = (struct iphdr*)(packet + sizeof(struct ethhdr));
+	ip_header = (struct iphdr*)(packet + sizeof(struct ethhdr));
 
 	// get tcp header
-	struct tcphdr *tcph=(struct tcphdr*)(packet + ip_header->ihl*4 + sizeof(struct ethhdr));
+	tcp_header = (struct tcphdr*)(packet + ip_header->ihl*4 + sizeof(struct ethhdr));
 
 	// print timestamp
-	struct timeval tv;
 	tv = header->ts;
-  	char buf[28];
   	gettimeofday(&tv, NULL);
 
   	if(format_timeval(&tv, buf, sizeof(buf)) > 0) {
     	printf("%s ", buf);
 	}
 
+	// get src and dest
 	memset(&src, 0, sizeof(src));
 	src.sin_addr.s_addr = ip_header->saddr;
 	
@@ -65,36 +61,17 @@ void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char 
 	dest.sin_addr.s_addr = ip_header->daddr;
 
 	// print src IP and port
-	printf("%s : %u > ", inet_ntoa(src.sin_addr), ntohs(tcph->source));
-	printf("%s : %u, ", inet_ntoa(dest.sin_addr), ntohs(tcph->dest));
+	printf("%s : %u > ", inet_ntoa(src.sin_addr), ntohs(tcp_header->source));
+	printf("%s : %u, ", inet_ntoa(dest.sin_addr), ntohs(tcp_header->dest));
 
 	// print packet length
 	printf("length %d bytes\n", ntohs(ip_header->tot_len));
 
-	// check protocol
-	switch (ip_header->protocol)
-	{
-		case 1:  //ICMP Protocol
-			// ++icmp;
-			// print_icmp_packet( buffer , size);
-			break;
-		
-		case 6:  //TCP Protocol
-			// ++tcp;
-			// print_tcp_packet(buffer , size);
-			break;
-		
-		case 17: //UDP Protocol
-			// ++udp;
-			// print_udp_packet(buffer , size);
-			break;	
-		
-		// #TODO handle arp
-		default:
-			break;
-	}
-	// printf("protocol number: %d TCP : %d   UDP : %d   ICMP : %d   IGMP : %d   Others : %d   Total : %d\n", iph->protocol, tcp , udp , icmp , igmp , others);
+	//set size of headers
+	size_of_headers = sizeof(struct ethhdr) + ip_header->ihl*4 + tcp_header->doff * 4;
 
+	// print packet payload
+	print_data(packet + size_of_headers, header->len);	
 }
 
 
@@ -113,4 +90,74 @@ ssize_t format_timeval(struct timeval *tv, char *buf, size_t sz)
     }
   }
   return written;
+}
+
+void print_data(const u_char *packet_data, int size_of_data) {
+
+	// mask that will result everything non zero as truth when &
+	// 1111
+	int mask_true = 15;
+	char buffer[200];
+	buffer[0] = '0';
+	int buf_pos = 0;
+	// std::string ascii_string = "";
+
+	// print hexadecimal representation
+	for(int i = 0; i < size_of_data; i++) {
+		// zacatek radku
+    	if((i & mask_true) == 0) {
+       		printf("0x%04x: ",i);
+		}
+
+		printf("%02x%c",(unsigned char)packet_data[i], ' ');
+		buffer[buf_pos] = (unsigned char)packet_data[i];
+		buf_pos++;
+		
+		if(((i + 1) & mask_true) == 0) {
+			for(int i = 0; i < 8; i++) {
+					if(isprint(buffer[i])) {
+						printf("%c", buffer[i]);
+					} else {
+						printf(".");
+					}
+				}
+
+				printf(" ");
+
+				for(int i = 8; i < 16; i++) {
+					if(isprint(buffer[i])) {
+						printf("%c", buffer[i]);
+					} else {
+						printf(".");
+					}
+				}
+			buf_pos = 0;
+			printf("\n");
+		}
+
+	}
+
+	if(buf_pos != 0) {
+		for(int i = buf_pos; i < 16; i++) {
+			printf("   ");
+		}
+
+		for(int i = 0; i < buf_pos; i++) {
+			if(i == 8) {
+				printf(" ");
+			}
+
+			if(isprint(buffer[i])) {
+				printf("%c", buffer[i]);
+			} else {
+				printf(".");
+			}
+		}
+	}
+
+	printf("\n");
+
+	// print ACII representation
+
+
 }

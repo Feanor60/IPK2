@@ -25,6 +25,8 @@ ssize_t format_timeval(struct timeval *tv, char *buf, size_t sz);
 
 void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
+void print_data(const u_char *packet_data, int size_of_data);
+
 #endif
 
 

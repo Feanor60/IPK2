@@ -90,9 +90,6 @@ bool setup_filter(pcap_t *interface, argument_structure *store_args) {
         strcat(filter_params, pchar);
     }
 
-    // std::cout << filter_params << "\n";
-    printf("filter_params is: %s\n", filter_params);
-
     pcap_compile(interface, &filter, filter_params, 0, net);
     retval = pcap_setfilter(interface, &filter);
     if(retval != 0) {
