@@ -21,7 +21,7 @@
  */
 bool print_packets(argument_structure *store_args, pcap_t *interface);
 
-const char *timestamp_string(struct timeval ts);
+ssize_t format_timeval(struct timeval *tv, char *buf, size_t sz);
 
 void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
