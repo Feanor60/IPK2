@@ -18,7 +18,7 @@
 #include "steal_packets.hpp"
 
 /**
- * @name: main
+ * @name: main  
  * @param argc: number of arguments
  * @param argv: 2d array of arguments
  * @return return 0 when no error

@@ -21,9 +21,7 @@
 bool print_packets(argument_structure *store_args, pcap_t *interface) {
 
     // typedef void (*pcap_handler)(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes);
-    std::cout << "here\n";
-    int retval = pcap_loop(interface, store_args->packets, handle_packet, NULL);
-    std::cout << "nretval: " << retval <<"\n";
+    pcap_loop(interface, store_args->packets, handle_packet, NULL);
     return true;
 }
 
@@ -65,7 +63,7 @@ void handle_packet(u_char *args, const struct pcap_pkthdr *header, const u_char 
 			++others;
 			break;
 	}
-	printf("TCP : %d   UDP : %d   ICMP : %d   IGMP : %d   Others : %d   Total : %d\r", tcp , udp , icmp , igmp , others , total);
+	printf("protocol number: %d TCP : %d   UDP : %d   ICMP : %d   IGMP : %d   Others : %d   Total : %d\n", ntohs(iph->protocol), tcp , udp , icmp , igmp , others , total);
     // std::cout << "and now here\n";
     // std::cout << "timestamp: " << timestamp_string(header->ts) << "\n";
 }

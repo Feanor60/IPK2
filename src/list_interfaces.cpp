@@ -14,7 +14,7 @@ bool list_interfaces() {
     pcap_if_t *alldevs;
     pcap_if_t *d;
 
-    char error_buffer[PCAP_ERRBUF_SIZE ];
+    char error_buffer[PCAP_ERRBUF_SIZE];
 
     int retval = pcap_findalldevs(&alldevs, error_buffer);
     if(retval != 0) {

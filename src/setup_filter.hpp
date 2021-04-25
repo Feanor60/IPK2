@@ -18,7 +18,6 @@
  * @param interface: handle that was open for sniffing
  * @param stre_args: structure containing command line arguments
  */
-void setup_filter(pcap_t *interface, argument_structure *store_args);
-
+bool setup_filter(pcap_t *interface, argument_structure *store_args);
 
 #endif

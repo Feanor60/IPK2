@@ -28,6 +28,7 @@ bool steal_packets(argument_structure *store_args) {
         return false;
     }
 
+    // specify device
     for(d = alldevs; d != NULL; d = d->next) {
         if(store_args->interface.compare(d->name) == 0) {
             interface_name = d->name;
@@ -39,21 +40,24 @@ bool steal_packets(argument_structure *store_args) {
         return false;
     }
 
-    interface = pcap_open_live(interface_name, 65536, 1, 0, error_buffer);
+    // open live device
+    interface = pcap_open_live(interface_name, 65536, 1, 1, error_buffer);
     if(interface == NULL) {
         std::cout << error_buffer << "\n";
         return false;
     }
-
-
+    
     // filter stolen packets
-    setup_filter(interface, store_args);
+    if(!setup_filter(interface, store_args)) {
+        return false;
+    }
 
     // print stolen packets
     if(!print_packets(store_args, interface)) {
         return false;
     }
 
+    pcap_close(interface);
     pcap_freealldevs(alldevs);
     return true;
 }
