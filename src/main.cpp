@@ -46,6 +46,11 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    if(store_arg->arp) {
+        std::cout << "ARP tato aplikace bohužel nepodporuje\n";
+        return 0;
+    }
+
     // list all interfaces
     if(store_arg->interface.compare("all_interfaces") == 0) {
         if(!list_interfaces()) {
