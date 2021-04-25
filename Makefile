@@ -11,7 +11,7 @@ SRC_DIR := ./src
 OBJ_DIR := ./obj
 
 # flags
-CPPFLAGS = -g -Wall
+CPPFLAGS = -g -Wall -Werror
 LDFLAGS = -lpcap
 
 # source files

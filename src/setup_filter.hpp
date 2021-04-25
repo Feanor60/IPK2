@@ -2,7 +2,7 @@
  * @file: setup_filter.hpp
  * @author: Vojtěch Bůbela
  * @login: xbubel08
- * @brief: declaration of setup_fitler function
+ * @brief: declaration of setup_filter function
  */
 
 #ifndef __SETUP_FILTER__

@@ -6,7 +6,6 @@
  */
 
 // includes
-
 #include <string>
 #include <algorithm>
 #include <list>
@@ -56,6 +55,7 @@ bool parse_args(argument_structure *arg_struct, char *argv[], int argc){
                 arg_struct->port = std::stoi(argument);
                 i++;
             }
+            
         } else if(argument.compare("-n") == 0) {
             int iter_next = i + 1;
 

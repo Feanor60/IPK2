@@ -46,17 +46,6 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // std::cout << " --- given arguments --- \n\n";
-    // std::cout << "interface: " << store_arg->interface << "\n";
-    // std::cout << "packets: "   << store_arg->packets << "\n";
-    // std::cout << "port: "      << store_arg->port << "\n";
-    // std::cout << "icmp: "      << store_arg->icmp << "\n";
-    // std::cout << "tcp: "       << store_arg->tcp << "\n";
-    // std::cout << "udp: "       << store_arg->udp << "\n";
-    // std::cout << "arp: "       << store_arg->arp << "\n";
-    // std::cout << " ----------------------- \n" ;
-
-
     // list all interfaces
     if(store_arg->interface.compare("all_interfaces") == 0) {
         if(!list_interfaces()) {

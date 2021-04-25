@@ -2,9 +2,8 @@
  * @file: setup_filter.cpp
  * @author: Vojtěch Bůbela
  * @login: xbubel08
- * @brief: definition of setup_fitler function
+ * @brief: definition of setup_filter function
  */
-
 
 #include <pcap.h>
 #include <string>
@@ -17,7 +16,6 @@
 bool setup_filter(pcap_t *interface, argument_structure *store_args) {
 
     // variables needed for filter setup
-    // from http://homes.di.unimi.it/~gfp/SiRe/2002-03/progetti/libpcap-tutorial.html
     struct bpf_program filter;
     char *filter_params = (char*) malloc (100 * sizeof(char));
     bpf_u_int32 mask;
@@ -47,8 +45,6 @@ bool setup_filter(pcap_t *interface, argument_structure *store_args) {
         arg_counter++;
 
     // enter filter options
-    // -i eth0 -p 80 --tcp --udp --icmp --arp
-    // icmp or icmp6 or arp or udp port 80 or tcp port 80
 
     filter_params[0] = '\0';
     if(store_args->icmp) {
@@ -87,14 +83,13 @@ bool setup_filter(pcap_t *interface, argument_structure *store_args) {
         strcat(filter_params, " port ");
         std::string s = std::to_string(store_args->port);
         char const *pchar = s.c_str();
+     
         strcat(filter_params, pchar);
     }
 
     pcap_compile(interface, &filter, filter_params, 0, net);
-    retval = pcap_setfilter(interface, &filter);
-    if(retval != 0) {
-        std::cout << "somethng went wrong\n\n";
-    }
+    pcap_setfilter(interface, &filter);
+
 
     free(filter_params);
     return true;
